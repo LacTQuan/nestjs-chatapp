@@ -1,0 +1,28 @@
+services:
+  db:
+    container_name: postgres_chatapp
+    image: postgres
+    user: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /var/lib/postgresql/data
+      POSTGRES_DB: chatapp
+    volumes:
+      - db:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - db
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d postgres" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+networks:
+  db:
+    driver: bridge
+
+volumes:
+  db:
